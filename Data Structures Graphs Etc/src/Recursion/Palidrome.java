@@ -15,7 +15,7 @@ public class Palidrome {
 	}
 
 	public static boolean isPalindrome(String[] word, int i, int j){
-		if(i==j || i>j)
+		if(i>=j)
 			return true;
 		if(word[i++].equalsIgnoreCase(word[j--]))
 			return isPalindrome(word,i,j);

@@ -8,7 +8,7 @@ public class OnceInArray {
 	 */
 	public static void main(String[] args) {
 
-		int a[] = {1,1,2,2,4,4,-9,-9,8,8,8};
+		int a[] = {1,1,2,2,4,4,-9,-9,8,8};
 		find(a);
 
 	}
