@@ -6,8 +6,8 @@ public class Palidrome {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		String word = "maayalam";
-		if(isPalindrome(word.split(""),1,word.length()))
+		String word = "malayalam";
+		if(isPalindrome(word.split(""),0,word.length()-1))
 				System.out.println("the word is a palindrome");
 		else
 			System.out.println("the word is not a palindrome");
