@@ -157,13 +157,13 @@ public class BinaryTreeTraversal {
 	
 	public static void BFSWithLevels(BTNode root){
 		LinkedList<BTNode> bfsQ = new LinkedList<BTNode>();
-		int gen = 1, nextGen = 0, depth = 0;
+		int gen = 0, nextGen = 0, depth = 0;
 		bfsQ.add(root);
 		
 		while(!bfsQ.isEmpty()){
 			BTNode parent = bfsQ.remove();			
 			gen--;
-			if(gen == -1 && parent != root){
+			if(gen <= 0 && parent != root){
 				gen = nextGen;
 				nextGen = 0;
 				depth++;
@@ -177,8 +177,7 @@ public class BinaryTreeTraversal {
 				bfsQ.add(parent.RChild);
 				nextGen++;
 			}
-		}
-	}
+		
 		
 	}
 
