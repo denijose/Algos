@@ -1,5 +1,5 @@
 package ds;
-
+//implementation of a stack using an array
 public class ArrayStack {
 
 	private int[] stack;

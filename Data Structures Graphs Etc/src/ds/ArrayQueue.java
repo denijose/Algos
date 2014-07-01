@@ -1,5 +1,7 @@
 package ds;
-
+/* 
+ * implentation of a queue using an array
+ */
 public class ArrayQueue {
 
 	private int[] queue;

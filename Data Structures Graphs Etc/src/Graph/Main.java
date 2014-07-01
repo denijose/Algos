@@ -26,11 +26,16 @@ public class Main {
 //		Set<TreeNode> visited = new HashSet<TreeNode>();
 //		DFS(root);
 		
-															BTNode root = new BTNode("1");
-						root.LChild =  new BTNode("2");											root.RChild =  new BTNode("3");
-		root.LChild.LChild = new BTNode("4");root.LChild.RChild = new BTNode("5");			root.RChild.LChild = new BTNode("6");root.RChild.RChild = new BTNode("7");
-			
-		System.out.println(FindAncestors.DFS(root,new ArrayList<String>(),"4"));
+//															BTNode root = new BTNode("1");
+//						root.LChild =  new BTNode("2");											root.RChild =  new BTNode("3");
+//		root.LChild.LChild = new BTNode("4");root.LChild.RChild = new BTNode("5");			root.RChild.LChild = new BTNode("6");root.RChild.RChild = new BTNode("7");
+//			
+//		System.out.println(FindAncestors.DFS(root,new ArrayList<String>(),"4"));
+		
+
+		
+		
+		
 			
 	}
 	

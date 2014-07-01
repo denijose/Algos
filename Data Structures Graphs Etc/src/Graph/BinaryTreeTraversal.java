@@ -1,34 +1,26 @@
 package Graph;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 
 public class BinaryTreeTraversal {
 
 	private static HashMap<BTNode,Integer> nodeDistanceMap = new HashMap<BTNode,Integer>();
 	private static int MaxHorizontalDistance = 0;
 	private static BTNode[][] TwoDArray;
+	public static int HEIGHT = 0;
 	
 	/**
 	 * @param args
 	 */
+	static {
+		HEIGHT = 0;
+	}
+	
 	public static void main(String[] args) {
 		BTNode root = createBinaryTree();
-		//inorder(root);
-		//preorder(root);
-		//postorder(root);
-		drawGraph(root,1);
-		findMaxHorizontalDistance();
-		TwoDArray = new BTNode[nodeDistanceMap.size()][nodeDistanceMap.size()];
-		drawGraph2(root,0,0,"");
-		for(int i =0;i<nodeDistanceMap.size();i++){
-			for(int j=0;j<nodeDistanceMap.size();j++){				
-				if(TwoDArray[i][j]!=null)
-				  System.out.print(TwoDArray[i][j].data);
-				else
-				  System.out.print(" ");
-			}	
-			System.out.println();
-		}	
+		BFSWithLevels(root);
+		
 	}
 
 
@@ -45,6 +37,35 @@ public class BinaryTreeTraversal {
 		root.RChild.LChild.LChild.LChild = new BTNode("8");
 		
 		return root;
+		/*                           1
+		 *                      2          3
+		 *                  4      5     6
+		 *                              7
+		 *                             8 
+		 */ 
+		
+		
+	}
+	
+	
+
+	public static BTNode createBinaryTree2(){
+		BTNode root = new BTNode(1);
+		root.isRoot = true;
+		root.LChild = new BTNode(2);
+		root.RChild = new BTNode(3);
+		root.LChild.LChild = new BTNode(4);
+		root.LChild.RChild = new BTNode(5);
+		
+		return root;
+		/*                           1
+		 *                      2          3
+		 *                  4      5     
+		 *                              
+		 *                              
+		 */ 
+		
+		
 	}
 	
 	public static void inorder(BTNode node){
@@ -71,6 +92,31 @@ public class BinaryTreeTraversal {
 		postorder(node.RChild);
 		System.out.println(node.data);
 	}
+	
+	public static int getHeight(BTNode node, int height){
+	   if(node == null)
+	    	return height;
+		height++;
+		if(HEIGHT < height)
+			HEIGHT = height;
+	    getHeight(node.LChild,height);
+	    getHeight(node.RChild,height);
+	    return height;
+	}
+	
+	public static int getHeight2(BTNode node){
+		   if(node == null)
+		    	return 0;
+		
+		    int leftHeight = getHeight2(node.LChild);
+		    int rightHeight = getHeight2(node.RChild);
+		    
+		    if(leftHeight > rightHeight)
+		    	return ++leftHeight;
+		    else 
+		    	return ++rightHeight;
+		   
+		}
 	
 	public static void drawGraph(BTNode node,int verticalIndex){
 		if(node==null)	
@@ -108,5 +154,32 @@ public class BinaryTreeTraversal {
 			if(MaxHorizontalDistance<Math.abs(nodeDistanceMap.get(node)))
 				MaxHorizontalDistance = Math.abs(nodeDistanceMap.get(node));
 	}
+	
+	public static void BFSWithLevels(BTNode root){
+		LinkedList<BTNode> bfsQ = new LinkedList<BTNode>();
+		int gen = 1, nextGen = 0, depth = 0;
+		bfsQ.add(root);
+		
+		while(!bfsQ.isEmpty()){
+			BTNode parent = bfsQ.remove();			
+			gen--;
+			if(gen == -1 && parent != root){
+				gen = nextGen;
+				nextGen = 0;
+				depth++;
+			}
+			System.out.println(depth + "--" + parent.data);
+			if(parent.LChild!=null){
+				bfsQ.add(parent.LChild);
+				nextGen++;
+			}
+			if(parent.RChild!=null){
+				bfsQ.add(parent.RChild);
+				nextGen++;
+			}
+		}
+	}
+		
+	}
 
-}
+
