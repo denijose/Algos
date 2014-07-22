@@ -4,9 +4,9 @@ public class BTNode {
 	public boolean isRoot;
 	//public BTNode parent;
 	public BTNode LChild, RChild;
-	public Object data;
+	public int data;
 	
-	public BTNode(Object data){
+	public BTNode(int data){
 		this.data = data;
 		//parent = null;
 		LChild = null;

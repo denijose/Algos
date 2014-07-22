@@ -26,15 +26,15 @@ public class BinaryTreeTraversal {
 
 
 	public static BTNode createBinaryTree(){
-		BTNode root = new BTNode("1");
+		BTNode root = new BTNode(1);
 		root.isRoot = true;
-		root.LChild = new BTNode("2");
-		root.RChild = new BTNode("3");
-		root.LChild.LChild = new BTNode("4");
-		root.LChild.RChild = new BTNode("5");
-		root.RChild.LChild = new BTNode("6");
-		root.RChild.LChild.LChild = new BTNode("7");
-		root.RChild.LChild.LChild.LChild = new BTNode("8");
+		root.LChild = new BTNode(2);
+		root.RChild = new BTNode(3);
+		root.LChild.LChild = new BTNode(4);
+		root.LChild.RChild = new BTNode(5);
+		root.RChild.LChild = new BTNode(6);
+		root.RChild.LChild.LChild = new BTNode(7);
+		root.RChild.LChild.LChild.LChild = new BTNode(8);
 		
 		return root;
 		/*                           1
@@ -61,6 +61,25 @@ public class BinaryTreeTraversal {
 		/*                           1
 		 *                      2          3
 		 *                  4      5     
+		 *                              
+		 *                              
+		 */ 
+		
+		
+	}
+	
+	public static BTNode createBST(){
+		BTNode root = new BTNode(4);
+		root.isRoot = true;
+		root.LChild = new BTNode(2);
+		root.RChild = new BTNode(6);
+		root.LChild.LChild = new BTNode(1);
+		root.LChild.RChild = new BTNode(3);
+		
+		return root;
+		/*                           4
+		 *                      2          6
+		 *                  1      3     
 		 *                              
 		 *                              
 		 */ 
@@ -163,7 +182,7 @@ public class BinaryTreeTraversal {
 		while(!bfsQ.isEmpty()){
 			BTNode parent = bfsQ.remove();			
 			gen--;
-			if(gen == -1 && parent != root){
+			if(gen <= 0 && parent != root){
 				gen = nextGen;
 				nextGen = 0;
 				depth++;
@@ -179,6 +198,15 @@ public class BinaryTreeTraversal {
 			}
 		}
 	}
+	
+	public static double MaxDepth(BTNode node){
+		if(node == null)
+			return 0;
+		else
+			return 1 + Math.max(MaxDepth(node.LChild), MaxDepth(node.RChild));
+	}
+	
+	
 		
 	}
 
