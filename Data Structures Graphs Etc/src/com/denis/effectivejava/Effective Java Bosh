@@ -1,0 +1,8 @@
+
+
+Chapter 3 Methods Common to All Objects
+	item 8  Overriding equals -  		ex:
+	item 9  Overriding hashcodes		ex:
+	item 10 Overriding toString	 	    ex:
+	item 11 Overriding clone			ex:
+	item 12 Implementing Comparable		ex:
