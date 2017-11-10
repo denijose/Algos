@@ -1,4 +1,4 @@
-package others;
+package org.denisjos.algos;
 
 public class HeapNode {
    int list;

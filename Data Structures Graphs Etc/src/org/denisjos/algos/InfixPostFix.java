@@ -1,4 +1,4 @@
-package others;
+package org.denisjos.algos;
 //infix to postfix
 import java.util.Stack;
 

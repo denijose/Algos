@@ -31,7 +31,7 @@ public class BinaryTreeTraversal {
 		root.LChild = new BTNode(2);
 		root.RChild = new BTNode(3);
 		root.LChild.LChild = new BTNode(4);
-		root.LChild.RChild = new BTNode(5);
+		root.LChild.RChild = new BTNode(5); 
 		root.RChild.LChild = new BTNode(6);
 		root.RChild.LChild.LChild = new BTNode(7);
 		root.RChild.LChild.LChild.LChild = new BTNode(8);

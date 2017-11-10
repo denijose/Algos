@@ -9,16 +9,22 @@ public class Algos {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		int N = (int)convertToIntegerFormat("10100");
+		//int N = (int)convertToIntegerFormat("10100");
 		//int M = (int)convertToIntegerFormat("101");
 		//setBitsBetweenJandIinN(N,M,2,0);
-		System.out.println(checkPowerOf2(1));
+		//System.out.println(checkPowerOf2(1));
+		int[] a = new int[]{5,3,4,2,5,6,6,1};
+		findTwoRepeatingEleInArray(a);
 		
 	}
 
-	/*You are given two 32-bit numbers, N and M, and two bit positions, i and j. Write a method to set all bits between i and j in N equal to M (e.g., M becomes a substring of N located at i and starting at j). 
+	/* Prob 5.1
+	 * You are given two 32-bit numbers, N and M, and two bit positions, i and j. 
+	 * Write a method to set all bits between i and j in N equal to M 
+	 * (e.g., M becomes a substring of N located at i and starting at j). 
 	 * Input: N = 10000000000, M = 10101, i = 2, j = 6
-     Output: N = 10001010100*/
+       Output: N = 10001010100
+     */
 	
 	public static void setBitsBetweenJandIinN(int N, int M, int j, int i){
 		int right = N | 1<<i;
@@ -53,7 +59,8 @@ public class Algos {
 		
 	}
 	
-	/*Given a (decimal - e.g. 3.72) number that is passed in as a string, print the binary representation. 
+	/*Prob 5.2
+	 * Given a (decimal - e.g. 3.72) number that is passed in as a string, print the binary representation. 
 	 * If the number can not be represented accurately in binary, print “ERROR” */
 	public static void convertToBinary2(String n){
 		String[] tokens = n.split("\\.");
@@ -84,7 +91,8 @@ public class Algos {
 		System.out.println(integerString+"."+decString);
 	}
 	
-	/* Given an integer, print the next smallest and next largest number that 
+	/* Prob 5.3
+	 * Given an integer, print the next smallest and next largest number that 
 	 * have the same number of 1 bits in their binary representation.
 	 */
 	public static void sameNoOfOnes(int n){
@@ -112,7 +120,8 @@ public class Algos {
 		return n & ~(1<<index);
 	}
 	
-	/*Write a function to determine the number of bits required to convert integer A to integer B. */
+	/* Prob 5.5
+	 * Write a function to determine the number of bits required to convert integer A to integer B. */
 	public static void bitSwapRequired(int n, int m){
 		int xor = n^m;
 		int count=0;
@@ -123,9 +132,92 @@ public class Algos {
 		System.out.println(count);
 	}
 	
-	/*check if a number is a power of 2 */
+	/* Prob 5.4
+	 * check if a number is a power of 2 */
 	public static boolean checkPowerOf2(int n){
 		return ((n&n-1)==0);
 	}
+	
+	
+	// Find the two non-repeating elements in an array of repeating elements
+	// or finding two numbers that occur odd number of times with org.denisjos.algos occuring even number
+	public static void findTwoNonRepeatingEleInArray(int[] a){
+		int xor=a[0];
+		for(int i=1;i<a.length;i++){
+			xor^=a[i];
+		}
+		//find any one of the set bits - i will find the right most set bit
+		int set=xor&~(xor-1);
+		//create two sets seperating whether the set bit is also set in the number and xor the numbers in each set
+		int xorOfSet1=0, xorOfSet2=0;
+		for(int i=0;i<a.length;i++){
+			if((set & a[i])==0){
+				if(xorOfSet1==0)
+					xorOfSet1=a[i];
+				else
+					xorOfSet1^=a[i];
+			}			
+			else{
+				if(xorOfSet2==0)
+					xorOfSet2=a[i];
+				else
+					xorOfSet2^=a[i];
+			}
+		}
+		
+		System.out.println(xorOfSet1 + " " + xorOfSet2);
+	}
+	
+	
+	//Find the two repeating elements in a given array containing numbers from 1 to n
+	/*You are given an array of n+2 elements. All elements of the array are in range 1 to n. 
+	 * And all elements occur once except two numbers which occur twice. 
+	 * Find the two repeating numbers
+	 * */
+	public static void findTwoRepeatingEleInArray(int[] a){
+		// getting x xor y by xoring all the numbers from 1 to n and each a[i]
+		int xor=a[0];
+		for(int i=1;i<a.length;i++){
+			xor^=a[i];
+		}
+		for(int i=1;i<=a.length-2;i++)
+			xor^=i;
+		// now xor=x^y;
+		// to get x and y out of xor , we know that the bits set in xor is set in only of x or y and not both
+		// we find one of the bits set in xor - the right most bit
+		int set = xor & ~(xor-1);
+		
+		// we seperate the numbers that have the bit set and not set and xor them together with their duplicates
+		int xorOfSet1=0, xorOfSet2=0;
+		
+					
+		for(int i=0;i<a.length;i++){
+			if((set&a[i])==0){
+				if(xorOfSet1==0)
+					xorOfSet1=a[i];
+				else
+					xorOfSet1^=a[i];
+			}
+			else{
+				if(xorOfSet2==0)
+					xorOfSet2=a[i];
+				else
+					xorOfSet2^=a[i];				
+			}
+		}
+		
+		// find out the numbers from 1 to n who have the bit set
+		for(int i=1;i<=a.length-2;i++){
+			if((set&i)==0)
+				xorOfSet1^=i;			
+			else
+				xorOfSet2^=i;				
+		}
+		
+		
+		System.out.println(xorOfSet1 + " " + xorOfSet2);		
+	}
+	
+	
 	
 }

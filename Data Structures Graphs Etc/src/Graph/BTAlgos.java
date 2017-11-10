@@ -16,8 +16,7 @@ public class BTAlgos {
 	
 	public static void main(String[] args) {
 		BTNode root = BinaryTreeTraversal.createBinaryTree();
-		printAllPaths(root,"");
-
+		connectNodes();
 	}
 
 	// Given a BST, transform it into sum tree where each node contains sum of all nodes greater than that node.
@@ -32,11 +31,6 @@ public class BTAlgos {
 		node.data = gatherSum(node.RChild, sum);
 		gatherSum(node.LChild,temp+(int)node.data);
 		return (int)node.data;		
-	}
-	
-	//Reverse the alternate level nodes of the binary tree.
-	public static void reverseAlternateLevelNodes(BTNode node){
-		
 	}
 	
 	
@@ -56,7 +50,24 @@ public class BTAlgos {
 		printAllNodesKDistanceFromLeaf(node.LChild,path,k);
 		printAllNodesKDistanceFromLeaf(node.RChild,path,k);
 	}
-	
+	//print all the nodes k distance from the leaf, - another method
+	public static int printAllNodeKDistanceFromLeaf2(BTNode node, int k){
+		if(node==null)
+			return 0;
+		if(node.LChild==null && node.RChild==null)
+			return 1;
+		
+		int leftDepth = printAllNodeKDistanceFromLeaf2(node.LChild, k);
+		if(leftDepth==k)
+			System.out.print(node.data + " ");
+		
+		int rightDepth = printAllNodeKDistanceFromLeaf2(node.RChild, k);
+		if(rightDepth==k)
+			System.out.print(node.data + " ");
+		
+		return Math.max(leftDepth, rightDepth)+1;
+			
+	}
 	//print all the nodes k distance from the root
 	public static void printAllNodesKDistanceFromRoot(BTNode node, int k, int level){
 		if(node==null)
@@ -67,9 +78,8 @@ public class BTAlgos {
 			System.out.println(node.data);
 			return;
 		}
-		printAllNodesKDistanceFromRoot(node.LChild,k,++level);
-		--level;
-		printAllNodesKDistanceFromRoot(node.RChild,k,++level);		
+		printAllNodesKDistanceFromRoot(node.LChild,k,level+1);
+		printAllNodesKDistanceFromRoot(node.RChild,k,level+1);		
 		
 	}
 	
@@ -80,16 +90,8 @@ public class BTAlgos {
 		else
 			return 1 + Math.max(MaxDepth(node.LChild), MaxDepth(node.RChild));
 	}
-	
-	public static double MinDanglingDepth(BTNode node){
-		if(node == null)
-			return 0;
-		else
-			return 1 + Math.min(MaxDepth(node.LChild), MaxDepth(node.RChild));
-	}
-		
 
-	//return the depth of the leaf nearest to the root
+	//return the depth of the leaf nearest to the root = min depth of a tree
 	public static double MinDepth(BTNode node){
 		if(node.LChild==null && node.RChild==null)
 			return 1;
@@ -98,7 +100,7 @@ public class BTAlgos {
 		else if(node.RChild==null)
 			return 1+ MinDepth(node.LChild);
 		else if(node.LChild==null)
-			return 1 + MinDepth(node.LChild);
+			return 1 + MinDepth(node.RChild);
 		
 		return 0;
     }
@@ -106,8 +108,8 @@ public class BTAlgos {
 	//find if the given BT is balanced or not
 	public static boolean isBalanced(BTNode root){		
 		double maxDepth = MaxDepth(root);
-		double minDanglingDepth = MinDanglingDepth(root);
-		if(Math.abs(maxDepth - minDanglingDepth) > 1)
+		double minDepth = MinDepth(root);
+		if(Math.abs(maxDepth - minDepth) > 1)
 			return false;
 		else 
 			return true;
@@ -133,59 +135,7 @@ public class BTAlgos {
 		return node;		
 	}
 
-	/* connect siblings at each levels of a binary tree  */
-	public static class Node{
-		String data;
-		Node LChild;
-		Node RChild;
-		Node right;
-		
-		Node(String data){
-			this.data = data;
-		}
-	}
-	public static  Node createBTForConnectSiblings(){
-		Node root = new Node("1");
-		root.LChild = new Node("2");
-		root.RChild = new Node("3");
-		root.LChild.LChild = new Node("4");
-		root.LChild.RChild = new Node("5");
-		root.RChild.LChild = new Node("6");
-		root.RChild.LChild.LChild = new Node("7");
-		root.RChild.LChild.LChild.LChild = new Node("8");		
-		return root;
-	}
-	public static void connectSiblings(Node root){
-		LinkedList<Node> bfsQ = new LinkedList<Node>();
-		root.right=null;
-		bfsQ.add(root);
-		int gen=1, nextGen=0, depth=0;
-		while(!bfsQ.isEmpty()){
-			Node curNode =  bfsQ.remove();
 
-			gen--;		
-			
-			if(gen==1 && curNode!=root)
-				curNode.right=null;
-			else
-				curNode.right = bfsQ.peek();
-			
-			if(gen<=0 && curNode!=root){
-				gen = nextGen;
-				nextGen=0;
-				depth++;						
-			}
-			if(curNode.LChild!=null){
-				bfsQ.add(curNode.LChild);
-				nextGen++;
-			}	
-			if(curNode.RChild!=null){
-				bfsQ.add(curNode.RChild);
-				nextGen++;
-			}
-		}
-	}
-	
 	// 	Print vertical sum of a binary tree
 	public static void printVerticalSum(BTNode root){
 		int depth = (int) MaxDepth(root);
@@ -203,7 +153,19 @@ public class BTAlgos {
 		findVerticalSum(node.LChild, sumArray,dir-1,depth);
 		findVerticalSum(node.RChild, sumArray,dir+1,depth);		
 	}
-	
+	public static HashMap<Integer,Integer> verticalSumMap = null;
+	public static void printVerticalSum2(BTNode node,int dir){
+		if(node==null)
+			return;
+		if(!verticalSumMap.containsKey(dir))
+			verticalSumMap.put(dir,node.data);
+		else{
+ 			int sum = verticalSumMap.get(dir);
+			verticalSumMap.put(dir, sum+node.data);
+		}
+		printVerticalSum2(node.LChild,dir-1);
+		printVerticalSum2(node.RChild,dir+1);
+	}
 	
 /*****************
  * ****
@@ -215,7 +177,7 @@ public class BTAlgos {
 	//create a complete binary tree using array
 
 	public static int[] createBTree(){
-	return new int[]{1,2,3,4,5,6,7,8};
+	    return new int[]{1,2,3,4,5,6,7,8};
 	}
 	/*           1
 	 *          / \
@@ -284,6 +246,13 @@ public class BTAlgos {
 	 * ****
 	 * ****/
 	
+	/*****
+	 * ------------------------------Inorder stuff - ----------------------------------------
+	 * 1. inorder traversal using iteration and stack
+	 * 2. inorder traversal without recursion and stack - using Morris Traversal/threaded bin tree traversal	 * 													  
+	 * 3. find inorder successor of a node 
+	 * 4. pop inorder successors
+	 */
 	// inorder traversal using iterationa and stack
 	public static void inorderWithoutRec(BTNode root){
 		LinkedList<BTNode> stack = new LinkedList<BTNode>();
@@ -298,8 +267,54 @@ public class BTAlgos {
 		     System.out.print(curNode.data + " ");
 		     curNode = curNode.RChild;
 		}	
-
 	}
+	/*To find inorder successor
+	 * 1.iterative way
+	 * 2. recursion
+	 * */
+	public static void inOrderSuccessorRec(BTNode node, BTNode node2, BTNode next){
+		if(node==null)
+			return;
+		inOrderSuccessorRec(node.RChild, node2,next);
+		if(node==node2){
+			if(next!=null)
+				System.out.println(next.data);
+		}
+		next=node;		
+		inOrderSuccessorRec(node.LChild, node2,next);
+	}
+	
+    //inorder traversal without rec and stack
+    public static void inorderWithoutRecAndStack(BTNode root){
+    	BTNode cur = root;
+    	while(cur!=null){
+    		if(cur.LChild==null){
+    			System.out.print(cur.data + " ");
+    			cur = cur.RChild;
+        }
+        else{
+        	BTNode pre = cur.LChild;
+        	while(pre.RChild!=null && pre.RChild!=cur)
+        		pre=pre.RChild;
+        	if(pre.RChild==null){
+        		pre.RChild = cur;
+        		cur = cur.LChild;	
+        	}
+        	else{
+        		pre.RChild = null;
+        		System.out.print(cur.data + " ");
+        		cur = cur.RChild;	       
+        	}
+        }
+       
+        }
+   	
+    }
+	
+	/**
+	 * -----------------------------end of Inorder stuff---------------------
+	 * 
+	 */
 	
 	//Construct Tree from given Inorder and Preorder traversals
 	public static BTNode BTFromInOPreO(int[] in, int[] pre, int begin, int end){		
@@ -419,26 +434,6 @@ public class BTAlgos {
 		ancestors.pop();	
 	}
 	
-	public static BTNode inorderSuccessor(BTNode root,BTNode node){
-		if(node.RChild!=null){
-			BTNode temp = node.RChild;
-			while(temp.LChild!=null){
-				temp=temp.LChild;
-			}
-			return temp;
-	}		
-		BTNode succ=root;
-		while(root!=null){
-			if(node.data<root.data){
-				succ=root;
-				root=root.LChild;
-			}
-			else
-				root=root.RChild;
-		}
-		return succ;	
-	}
-	
 	public static int NoOfLeaves(BTNode node){
 		if(node==null)
 			return 0;
@@ -498,36 +493,11 @@ public class BTAlgos {
 	   
 	    }
 	    
-	    //inorder traversal without rec and stack
-	    public static void inorderWithoutRecAndStack(BTNode root){
-	    	BTNode cur = root;
-	    	while(cur!=null){
-	    		if(cur.LChild==null){
-	    			System.out.print(cur.data + " ");
-	    			cur = cur.RChild;
-	        }
-	        else{
-	        	BTNode pre = cur.LChild;
-	        	while(pre.RChild!=null && pre.RChild!=cur)
-	        		pre=pre.RChild;
-	        	if(pre.RChild==null){
-	        		pre.RChild = cur;
-	        		cur = cur.LChild;	
-	        	}
-	        	else{
-	        		pre.RChild = null;
-	        		System.out.print(cur.data + " ");
-	        		cur = cur.RChild;	       
-	        	}
-	        }
-	       
-	        }
-	   	
-	    }
 	    
 	    /* Given a binary tree and a number, return true if the tree has a root-to-leaf path 
 	     * such that adding up all the values along the path equals the given number.
-	     *  Return false if no such path can be found */
+	     *  Return false if no such path can be found 
+	     *  */
 	    
 	    public static boolean rootToLeafPathSum(BTNode node, int sum, int n){
 	    	if(node==null)
@@ -537,7 +507,7 @@ public class BTAlgos {
 	    			return true;
 	    		else return false;
 	    }	   
-	    return rootToLeafPathSum(node.LChild, sum+node.data, n) || rootToLeafPathSum(node.RChild, sum+node.data, n); 	
+	         return rootToLeafPathSum(node.LChild, sum+node.data, n) || rootToLeafPathSum(node.RChild, sum+node.data, n); 	
 	    }
 	    
 	    
@@ -648,4 +618,141 @@ public class BTAlgos {
 		return node;
 	}
 	
+	/*  Prob4.4
+	 *  Given a binary search tree, design an algorithm which creates a linked list 
+ 		all the nodes at each depth (eg, if you have a tree with 
+ 		depth D, you’ll have D linked lists).
+	 * */
+	public static HashMap<Integer, LinkedList<BTNode>> map=null;
+	public static void levelOrderTraversalRec(BTNode node, int level){
+		if(map==null){
+			map = new HashMap<Integer, LinkedList<BTNode>>();
+		}
+		if(node==null)
+			return;
+		
+		if(map.containsKey(level)){
+			LinkedList<BTNode> list=map.get(level);
+			list.add(node);
+			map.put(level, list);
+		}else{
+			LinkedList<BTNode> list = new LinkedList<BTNode>();
+			list.add(node);
+			map.put(level, list);
+		}
+		levelOrderTraversalRec(node.LChild,level+1);
+		levelOrderTraversalRec(node.RChild, level+1);		
+	}
+	
+	/*---------------------------connect nodes at the same level---------------------------------------------
+	 	1.using rec (preoorde traversal)
+	 	2.
+	*/
+	public static void connectNodes(){
+		//create a complete binary tree	
+		/*                     1
+		 *                   2   3 
+		 *                 4  5 6 7
+		*/                  
+		BTAlgos.BTNode2 root = new BTAlgos.BTNode2(1);
+		root.LChild = new BTAlgos.BTNode2(2);
+		root.RChild = new BTAlgos.BTNode2(3);
+		root.LChild.LChild = new BTAlgos.BTNode2(4);
+		root.LChild.RChild = new BTAlgos.BTNode2(5);
+		root.RChild.LChild = new BTAlgos.BTNode2(6);
+		root.RChild.RChild = new BTAlgos.BTNode2(7);
+		
+		connectNodesRec2(root);
+		//testing
+		System.out.println(root.LChild.LChild.nextRight.data);
+	}
+	public static class BTNode2{
+		BTNode2 LChild, RChild, nextRight;
+		int data;
+		BTNode2(int data){this.data = data;}
+	}
+	public static void connectNodesRec2(BTNode2 node){
+		if(node==null)
+			return;
+	    //find the first non leaf node via current node's nextRight and get its left or right parent
+		BTNode2 nonLeaf = node.nextRight, next = null;
+		while(nonLeaf!=null){
+			if(nonLeaf.LChild!=null){
+				next=nonLeaf.LChild;
+				break;
+			}	
+			if(nonLeaf.RChild!=null){
+				next=nonLeaf.RChild;
+				break;
+			}	
+			nonLeaf = nonLeaf.nextRight;
+		}
+		if(node.LChild!=null){
+			if(node.RChild!=null)
+				node.LChild.nextRight=node.RChild;
+			else
+				node.LChild.nextRight=next;
+		}
+		if(node.RChild!=null)
+			node.RChild.nextRight=next;
+		connectNodesRec2(node.LChild);		
+		connectNodesRec2(node.RChild);
+	}
+	public static void connectNodesRec3(BTNode2 node, BTNode2 parent){
+		if(node==null)
+			return;
+		BTNode2 next=null, temp=null;
+		if(parent!=null)
+			temp=parent.nextRight;
+		
+		node.nextRight=next;
+	}
+	
+	//using modified level order traversal but uses aux space of O(n)	
+	//using an iterative solution to remove the auxilary space
+	public static void connectNodesIterative(BTNode2 root){
+		LinkedList<BTNode2> bfsQ = new LinkedList<BTNode2>();
+		root.nextRight=null;
+		bfsQ.add(root);
+		int gen=1, nextGen=0, depth=0;
+		while(!bfsQ.isEmpty()){
+			BTNode2 curNode =  bfsQ.remove();
+			gen--;					
+			if(gen==1 && curNode!=root)
+				curNode.nextRight=null;
+			else
+				curNode.nextRight = bfsQ.peek();			
+			if(gen<=0 && curNode!=root){
+				gen = nextGen;
+				nextGen=0;
+				depth++;						
+			}
+			if(curNode.LChild!=null){
+				bfsQ.add(curNode.LChild);
+				nextGen++;
+			}	
+			if(curNode.RChild!=null){
+				bfsQ.add(curNode.RChild);
+				nextGen++;
+			}
+		}
+	}
+	//--------------------------end of connect nodes at the same level--------------------------
+	
+	
+	/* Prob 4.5
+	 *  Write an algorithm to find the ‘next’ node (e.g., in-order successor)
+	 *  of a given node in a binary search tree where each node has a link to its parent.
+	 * */
+	
+	/* Prob 4.7 You have two very large binary trees: T1, with millions of nodes, and T2, with 
+	 * hundreds of nodes. Create an algorithm to decide if T2 is a subtree of T1.
+	 * */
+	
+	
+	/*find pre order successor of a node*/
+	public static void findPreOrderSuccessor(BTNode temp, int data, BTNode successor){
+		
+		
+	}
 }

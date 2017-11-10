@@ -20,8 +20,6 @@ public class Palidrome {
 		if(word[i++].equalsIgnoreCase(word[j--]))
 			return isPalindrome(word,i,j);
 		else
-		    return false;
-
-		
+		    return false;	
 	}
 }

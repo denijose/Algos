@@ -4,15 +4,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class TreeNode {
-	public Set<TreeNode> children;
-	public boolean isRoot;
-	public TreeNode parent;
+	public Set<TreeNode> connections;
 	public String data;
 	
-	public TreeNode(String data, boolean isRoot){
+	public TreeNode(String data){
 		this.data = data;
-		this.parent = null;
-		this.children = new HashSet<TreeNode>();
-		this.isRoot = isRoot;
+		this.connections = new HashSet<TreeNode>();
 	}
 }

@@ -5,15 +5,24 @@ public class MergeSort {
 	/**
 	 * @param args
 	 */
+	static int temp[] = null;
+	
 	public static void main(String[] args) {
-		int a[] = {22,3,-2,35,34,1,2};
-		mergeSort(a,0,a.length-1);
-		for(int i=0; i<a.length;i++)
-			System.out.println(a[i]);
-		
-
+		int A[] = {2, 1, 1, 2, 3, 1};
+		temp = new int[A.length];
+		mergeSort2(A,0,A.length-1);
+        int count=1;
+        int curr=temp[0];        
+        for(int i=1;i<temp.length;i++){
+            System.out.print(temp[i] + " ");
+            if(curr!=temp[i])
+               count++;
+            curr = temp[i];            
+        }
+        System.out.print(count);
 	}
-
+	
+	
 	public static void mergeSort(int[] a, int left, int right){
 		if(left==right)
 			return;		
@@ -45,5 +54,38 @@ public class MergeSort {
 			index++;
 		}
 	}
+	
+    public static void mergeSort2(int[] A, int low, int high){
+        if(low>=high)
+            return;
+        int mid = (high + low)/2;
+        
+        mergeSort2(A, low, mid);
+        mergeSort2(A, mid+1, high);
+        merge2(A, low, mid, high);
+}
+
+public static void merge2(int[] A, int low, int mid, int high){
+    int i=low, j=mid+1;
+    int k=low;
+    while(i<=mid || j<=high){
+        if(i<=mid && j<=high){
+            if(A[i] < A[j]){
+                temp[k++] = A[i++];
+            }
+            else
+                temp[k++] = A[j++];
+        } else if(i<=mid){
+            temp[k++] = A[i++];
+        } else if(j<=high){
+            temp[k++] = A[j++];
+        }  
+        
+    } 
+    
+    for (i = low; i <= high; i++) {
+        A[i] = temp[i];
+      }
+}
 	
 }
